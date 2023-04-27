@@ -39,7 +39,7 @@ public class SimulationManager implements Runnable {
                 numberofServers = Integer.parseInt(frame.getQueuesTextField());
                 numberofClients = Integer.parseInt(frame.getClientsTextField());
                 selectionPolicy = frame.getComboBox();
-                Scheduler.maxTasksPerServer = numberofClients;
+                Scheduler.maxTasksPerServer = 50;
                 System.out.println(" aici: " + Scheduler.maxTasksPerServer);
 
                 events.setVisible(true);
@@ -176,24 +176,27 @@ public class SimulationManager implements Runnable {
     @Override
     public void run() {
         String res = "";
+        String res2 = "";
         int max = -1;
         int peakHour = -1;
     int currentTime = 0;
 
     while(currentTime < timeLimit){
-        res = res + "Time " + currentTime + "\n";
+         res = "Time " + currentTime + "\n";
+        res2 = res2 + "Time " + currentTime + "\n";
+
 
         if(generatedTasks.size() != 0) {
-            res+= "Waiting clients:\n";
+            res2+= "Waiting clients:\n";
         }
 
         for(Task t:generatedTasks){
             if(t.getArrivalTime() != currentTime) {
-                res = res + t.toString();
+                res2 = res2 + t.toString();
             }
         }
         if(generatedTasks.size() != 0) {
-            res = res + "\n";
+            res2 = res2 + "\n";
         }
         Iterator<Task> iterator = generatedTasks.iterator();
 
@@ -213,6 +216,7 @@ public class SimulationManager implements Runnable {
 
         for(Server s: scheduler.getServers()){
             res+=s.toString();
+            res2+=s.toString();
         }
 
         if(sumClients(scheduler) > max){
@@ -222,7 +226,7 @@ public class SimulationManager implements Runnable {
         events.setEvents(res);
 
         try {
-            Thread.sleep(1000);
+            Thread.sleep(100);
         }catch(InterruptedException e){
             System.out.println("Main thread interrupted");
         }
@@ -230,14 +234,14 @@ public class SimulationManager implements Runnable {
     }
 
     Server.runnable = false;
-    res+="\nAverage waiting time: " + Server.getAvgWaitingPeriod()/(double)numberofClients +"\n";
-    res+="\nAverage service time: " + avgServiceTime +"\n";
-    res+="\nFirst peak hour: " + peakHour +"\n";
+    res2+="\nAverage waiting time: " + Server.getAvgWaitingPeriod()/(double)numberofClients +"\n";
+    res2+="\nAverage service time: " + avgServiceTime +"\n";
+    res2+="\nFirst peak hour: " + peakHour +"\n";
 
         try {
                 FileWriter file = new FileWriter("log_of_events.txt");
                  BufferedWriter buff = new BufferedWriter(file);
-                buff.write(res);
+                buff.write(res2);
                 buff.close();
             } catch (IOException e) {
                 e.printStackTrace();

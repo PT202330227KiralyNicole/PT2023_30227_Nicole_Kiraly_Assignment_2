@@ -7,6 +7,7 @@ import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import static java.lang.System.exit;
 import static java.lang.Thread.sleep;
 
 public class Server implements Runnable {
@@ -75,7 +76,7 @@ public class Server implements Runnable {
             task = tasks.peek();
 
             if(task != null){
-                sleep(1000 * task.getServiceTime());
+                sleep(100 * task.getServiceTime());
                 this.waitingPeriod.set(this.waitingPeriod.intValue() - task.getServiceTime());
                 tasks.poll();
             }
@@ -85,6 +86,57 @@ public class Server implements Runnable {
         }
     }
 
+//    public void run(){
+//       // Task task=null;
+//        while(runnable){
+//            try {
+//                sleep(1000);
+//            }catch(InterruptedException ex){
+//                ex.printStackTrace();
+//            }
+//
+//                if(tasks.size() > 0){
+//                    tasks.element().setServiceTime(tasks.element().getServiceTime()-1);
+//                    this.waitingPeriod.set(this.waitingPeriod.intValue() - 1);
+//                    if(tasks.element().getServiceTime() == 0){
+//                        try{
+//                            tasks.take();
+//                        } catch (InterruptedException e) {
+//                            return;
+//                        }
+//                    }
+//
+//                }
+//
+//        }
+//    }
+
+
+//    public void run(){
+//        Task task=null;
+//
+//        while(runnable){
+//            if(!tasks.isEmpty()){
+//                try{
+//                    sleep(1000);
+//                }catch(InterruptedException e){
+//                    exit(-1);
+//                }
+//                if(tasks.size() >0){
+//                    for(Task t:tasks){
+//                        t.setServiceTime(t.getServiceTime()-1);
+//                        if(t.getServiceTime() == 0){
+//                            try{
+//                                tasks.take();
+//                            } catch (InterruptedException e) {
+//                                return;
+//                            }
+//                        }
+//                    }
+//                }
+//            }
+//        }
+//    }
     public String toString(){
         String res = "";
         if(this.tasks.size() == 0){
